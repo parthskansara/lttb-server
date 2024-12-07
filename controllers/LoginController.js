@@ -9,7 +9,7 @@ const clientId = process.env.CLIENT_ID;
 
 const getUrl = async (req, res) => {
     let finalUrl = targetUrl;
-    if (req.session.spotify) {
+    if (req.session && req.session.spotify) {
         try{            
             finalUrl = '/user';
         }
