@@ -5,7 +5,7 @@ const getAccessToken = async (req, res) => {
     const clientUrl = config.clientUrl;
     const { code } = req.query;  // Gets authorization code from Spotify's redirect after successful login
 
-    let codeVerifier = localStorage.getItem('code_verifier'); // TODO: Get current user's code verifier
+    let codeVerifier = req.session.spotify.codeVerifier; // TODO: Get current user's code verifier
     const url = `https://accounts.spotify.com/api/token`;
     const clientId = config.clientId;
     const redirectUri = config.redirectUri;
@@ -36,17 +36,24 @@ const getAccessToken = async (req, res) => {
         }
 
         const data = await response.json();
-        console.log('Logging access_token: ', data.access_token)
-        localStorage.setItem('access-token', data.access_token);
-        localStorage.setItem('refresh-token', data.refresh_token);
+
+        req.session.spotify = {
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token,
+            codeVerifier: codeVerifier,
+            expiration_time: new Date(new Date().getTime() + (data.expires_in * 1000)),
+        }
+
+        await req.session.save();
         res.redirect(`${clientUrl}/user`);
     } catch (error){
         console.error('Error fetching token: ', error);       
     }
 };
 
-const getRefreshToken = async() => {
-    const refreshToken = localStorage.getItem('refresh_token');
+const getRefreshToken = async(req, res) => {
+
+    const refreshToken = req.session.spotify.refreshToken;
     const url = 'https://accounts.spotify.com/api/token';
     const clientId = config.clientId;
 
@@ -73,11 +80,19 @@ const getRefreshToken = async() => {
         }
 
         const data = await response.json();
-        localStorage.setItem('access-token', data.access_token);
+        // localStorage.setItem('access-token', data.access_token);
+        req.session.spotify.accessToken = data.access_token;
 
         if (data.refresh_token){
-            localStorage.setItem('refresh-token', data.refresh_token);
+            // localStorage.setItem('refresh-token', data.refresh_token);
+            req.session.spotify.refreshToken = data.refresh_token;
         }        
+
+        if (data.expires_in){
+            req.session.spotify.expiration_time = new Date(new Date().getTime() + (data.expires_in * 1000))
+        }
+
+        await req.session.save();
         return data.access_token;
     } catch (error){
         console.error('Error fetching token: ', error);       

@@ -3,6 +3,6 @@ import express from 'express'
 
 const router = express.Router();
 
-router.get('/:access_token', ProfileController.getProfile);
+router.get('/', ProfileController.getProfile);
 
 export default router;

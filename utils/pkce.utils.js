@@ -7,7 +7,7 @@ const generateRandomString = (length) => {
     return Array.from(values).map(x => possible[x%possible.length]).join('');
   }
   
-const codeVerifier  = generateRandomString(64);
+
 
 // Code Challenge
 const sha256 = async(plain) => {
@@ -22,7 +22,11 @@ const base64encode = (input) => {
         .replace(/\//g, '_');
 }
 
-const hashed = await sha256(codeVerifier);
-const codeChallenge = base64encode(hashed);
+const generateCodeChallengeAndVerifier = async () => {
+    const codeVerifier  = generateRandomString(64);
+    const hashed = await sha256(codeVerifier);
+    const codeChallenge = base64encode(hashed);
+    return { codeChallenge, codeVerifier }
+}
 
-export default { codeChallenge, codeVerifier };
+export default generateCodeChallengeAndVerifier;
