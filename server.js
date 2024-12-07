@@ -8,6 +8,7 @@ import TokenRouter from './routes/TokenRouter.js';
 import ProfileRouter from './routes/ProfileRouter.js';
 
 import config from './config/auth.config.js';
+import getAccessTokenUsingRefreshToken from './services/refreshToken.service.js';
 
 const app = express();
 const PORT = config.port || 3000;
@@ -42,14 +43,29 @@ app.use(async(req, res, next) => {
 
         if (currentTime > expirationTime){
             try{
-                const response = await fetch('/api/token/refresh-token');
-                const data = await response.json();
+                const data = await getAccessTokenUsingRefreshToken(req.session.spotify.refreshToken);
+                
+                req.session.spotify.accessToken = data.access_token;
+
+                if (data.refresh_token){
+                    // localStorage.setItem('refresh-token', data.refresh_token);
+                    req.session.spotify.refreshToken = data.refresh_token;
+                }        
+        
+                if (data.expires_in){
+                    req.session.spotify.expiration_time = new Date(new Date().getTime() + (data.expires_in * 1000))
+                }
+        
+                await req.session.save();
             }
             catch(err){
                 console.error('Error refreshing token: ', err);
+                req.session.spotify = undefined;
+                next();
+
             }
 
-        }
+        } 
     }
     next();
 })
