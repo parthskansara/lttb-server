@@ -10,4 +10,5 @@ export default {
     clientUrl: process.env.CLIENT_URL,
     sessionSecret: process.env.SESSION_SECRET,
     mongoUri: process.env.MONGO_CONNECTION_URI,
+    appName: process.env.APP_NAME,
 };

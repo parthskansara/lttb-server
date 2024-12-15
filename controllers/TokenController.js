@@ -1,5 +1,4 @@
 import config from '../config/auth.config.js';
-import localStorage from '../utils/storage.utils.js';
 
 const getAccessToken = async (req, res) => {
     const clientUrl = config.clientUrl;

@@ -6,12 +6,17 @@ import { MongoClient } from 'mongodb';
 import LoginRouter from './routes/LoginRouter.js';
 import TokenRouter from './routes/TokenRouter.js';
 import ProfileRouter from './routes/ProfileRouter.js';
+import FollowerRouter from './routes/FollowerRouter.js';
+import PlaylistRouter from './routes/PlaylistRouter.js';
 
 import config from './config/auth.config.js';
 import getAccessTokenUsingRefreshToken from './services/refreshToken.service.js';
+import connectDB from './config/database.js';
 
 const app = express();
 const PORT = config.port || 3000;
+
+connectDB();
 
 const mongoUri = config.mongoUri;
 
@@ -86,6 +91,9 @@ app.use((req, res, next) => {
 })
 
 app.use('/api/profile', ProfileRouter);
+
+app.use('/api/follower', FollowerRouter);
+app.use('/api/playlist', PlaylistRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
