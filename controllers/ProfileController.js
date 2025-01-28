@@ -1,14 +1,6 @@
 import { createOrUpdateUser } from "../services/user.service.js";
 
 const getProfile = async (req, res) => {
-  if (
-    !req.session ||
-    !req.session.spotify ||
-    !req.session.spotify.accessToken
-  ) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
   const accessToken = req.session.spotify.accessToken;
   const response = await fetch("https://api.spotify.com/v1/me", {
     headers: {
@@ -35,14 +27,6 @@ const getProfile = async (req, res) => {
 };
 
 const getTopArtists = async (req, res) => {
-  if (
-    !req.session ||
-    !req.session.spotify ||
-    !req.session.spotify.accessToken
-  ) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
   const accessToken = req.session.spotify.accessToken;
   const params = new URLSearchParams({
     time_range: "medium_term",

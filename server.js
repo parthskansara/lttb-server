@@ -1,6 +1,6 @@
 import express from "express";
-import cors from "cors";
-import rateLimit from "express-rate-limit";
+// import cors from "cors";
+// import rateLimit from "express-rate-limit";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import { MongoClient } from "mongodb";
@@ -102,7 +102,7 @@ app.use(async (req, res, next) => {
   next();
 });
 
-app.get("/health", (req, res) => {
+app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "OK" });
 });
 
