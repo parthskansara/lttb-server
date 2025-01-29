@@ -22,8 +22,6 @@ import {
 //         - Playlist icon = user.imageUrl
 //     - Add the song to the playlist
 
-// TODO: Add the playlist id to map[follower_userId] in the current user's database
-
 // services/user.service.js :
 //      - getAccessTokenByUserId(user_id) => Also check if expired, and fetch a new one using refreshToken
 
@@ -68,6 +66,9 @@ const isSongAlreadyAdded = async (followerAccessToken, songUri, playlistId) => {
 };
 
 const createPlaylistForFollower = async (req, res) => {
+  if (!req.body || !req.session.spotify.user_id) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
   const { followerUserId, songUri } = req.body;
   const userId = req.session.spotify.user_id;
   let alreadyAdded = false;
@@ -76,7 +77,7 @@ const createPlaylistForFollower = async (req, res) => {
     const followerAccessToken = await getAccessTokenByUserId(
       followerUserId
     ).catch((error) => {
-      console.log("Error in getAccessTokenByUserId: ", error);
+      console.error("Error in getAccessTokenByUserId: ", error);
       throw new Error("Access Token Error");
     });
 
@@ -91,7 +92,6 @@ const createPlaylistForFollower = async (req, res) => {
     let playlistId;
 
     if (userDetails?.playlistRecommendations?.has(followerUserId)) {
-      //TODO: Check if songUri has been already added to the playlist
       playlistId = userDetails.playlistRecommendations.get(followerUserId);
       alreadyAdded = await isSongAlreadyAdded(
         followerAccessToken,

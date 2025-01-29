@@ -2,6 +2,11 @@ import config from "../config/auth.config.js";
 
 const getAccessToken = async (req, res) => {
   const clientUrl = config.clientUrl;
+
+  if (!req.query || !req.session?.spotify?.codeVerifier) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   const { code } = req.query; // Gets authorization code from Spotify's redirect after successful login
 
   let codeVerifier = req.session?.spotify?.codeVerifier;
