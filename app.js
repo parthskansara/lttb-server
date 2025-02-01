@@ -105,7 +105,7 @@ app.use(async (req, res, next) => {
 });
 
 app.get("/api/health", (req, res) => {
-  res.status(200).json({ status: "OK" });
+  res.status(200).send("<html><body><h1>Status: OK</h1></body></html>");
 });
 
 app.use("/api/login", LoginRouter);
