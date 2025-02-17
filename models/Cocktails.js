@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const CocktailSchema = new mongoose.Schema(
   {
-    cocktailId: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     displayName: {
       type: String,
       required: true,

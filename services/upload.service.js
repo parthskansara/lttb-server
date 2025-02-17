@@ -86,26 +86,17 @@ export const getAllCocktailsFromDb = async () => {
 };
 
 export const createOrUpdateCocktail = async (cocktailData) => {
-  const { cocktailId, displayName, recipeUrl, cocktailImgUrl, recipe } =
-    cocktailData;
+  const { displayName, recipeUrl, cocktailImgUrl, recipe } = cocktailData;
   console.log("Request to add cocktail made to the database");
   try {
     let cocktail;
-    if (cocktailId) {
-      cocktail = await Cocktails.findOneAndUpdate(
-        { cocktailId },
-        { displayName, recipeUrl, cocktailImgUrl, recipe },
-        { new: true, upsert: true }
-      );
-    } else {
-      cocktail = new Cocktails({
-        displayName,
-        recipeUrl,
-        cocktailImgUrl,
-        recipe,
-      });
-      await cocktail.save();
-    }
+    cocktail = new Cocktails({
+      displayName,
+      recipeUrl,
+      cocktailImgUrl,
+      recipe,
+    });
+    await cocktail.save();
     return cocktail;
   } catch (error) {
     console.error("Error updating cocktail: ", error);
