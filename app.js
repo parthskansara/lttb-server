@@ -12,7 +12,7 @@ import ProfileRouter from "./routes/ProfileRouter.js";
 import FollowerRouter from "./routes/FollowerRouter.js";
 import PlaylistRouter from "./routes/PlaylistRouter.js";
 
-// import MeoWoofCocktailRouter from "./routes/MeoWoofCocktailRouter.js";
+import MeoWoofCocktailRouter from "./routes/MeoWoofCocktailRouter.js";
 
 import config from "./config/auth.config.js";
 import getAccessTokenUsingRefreshToken from "./services/refreshToken.service.js";
@@ -35,7 +35,7 @@ app.use(
   })
 );
 
-// app.use("/api/cocktails", MeoWoofCocktailRouter);
+app.use("/api/cocktails", MeoWoofCocktailRouter);
 
 //TODO: align with spotify's rate limits https://developer.spotify.com/documentation/web-api/concepts/rate-limits
 const limiter = rateLimit({
