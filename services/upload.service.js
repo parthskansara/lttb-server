@@ -1,5 +1,6 @@
 import { google } from "googleapis";
 import Cocktails from "../models/Cocktails.js";
+import fs from "fs";
 
 const GOOGLE_API_FOLDER_ID = "1PACutlcKkxYt4eJY5DQex_2SSDjXLq8H";
 
@@ -7,7 +8,7 @@ export const constructUrlFromId = (imageId) => {
   return `https://drive.google.com/uc?id=${imageId}`;
 };
 
-export const uploadFile = async (imageName, imageFile) => {
+export const uploadFile = async (imageName, filePath) => {
   try {
     const auth = new google.auth.GoogleAuth({
       keyFile: "./meowoof-site-key.json",
@@ -24,10 +25,12 @@ export const uploadFile = async (imageName, imageFile) => {
       parents: [GOOGLE_API_FOLDER_ID],
     };
 
+    const fileContent = fs.createReadStream(filePath);
+
     const media = {
       mimeType: imageName.endsWith(".png") ? "image/png" : "image/jpeg",
       //TODO: Check format of image
-      body: imageFile.buffer,
+      body: fileContent,
     };
 
     const response = await driveService.files.create({
@@ -40,6 +43,7 @@ export const uploadFile = async (imageName, imageFile) => {
     return response.data.id;
   } catch (err) {
     console.log("Upload File error!", err);
+    throw err;
   }
 };
 

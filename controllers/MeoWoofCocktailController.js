@@ -44,7 +44,7 @@ export const addCocktail = async (req, res) => {
       // Use the file path to upload to Google Drive
       const cocktailImgId = await uploadFile(imageFileName, cocktailImage.path);
 
-      const cocktailImgUrl = await constructUrlFromId(cocktailImgId);
+      const cocktailImgUrl = constructUrlFromId(cocktailImgId);
 
       const cocktailData = {
         displayName,
