@@ -12,8 +12,16 @@ export const constructUrlFromId = (imageId) => {
 
 export const uploadFile = async (imageName, fileBuffer) => {
   try {
+    const credentialsBase64 = process.env.GOOGLE_APPLICATION_CREDENTIALS_BASE64;
+    if (!credentialsBase64) {
+      throw new Error("Google credentials not found in environment variables");
+    }
+
+    const credentials = JSON.parse(
+      Buffer.from(credentialsBase64, "base64").toString()
+    );
     const auth = new google.auth.GoogleAuth({
-      keyFile: "meowoof-site-key.json",
+      credentials,
       scopes: ["https://www.googleapis.com/auth/drive"],
     });
 
