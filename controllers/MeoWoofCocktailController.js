@@ -41,8 +41,11 @@ export const addCocktail = async (req, res) => {
         .substring(1);
       const imageFileName = `${displayName}_img.${imageExtension}`;
 
-      // Use the file path to upload to Google Drive
-      const cocktailImgId = await uploadFile(imageFileName, cocktailImage.path);
+      // Upload file buffer directly to Google Drive
+      const cocktailImgId = await uploadFile(
+        imageFileName,
+        cocktailImage.buffer
+      );
 
       const cocktailImgUrl = constructUrlFromId(cocktailImgId);
 
@@ -50,13 +53,10 @@ export const addCocktail = async (req, res) => {
         displayName,
         recipeUrl,
         cocktailImgUrl,
-        recipe, // If recipe is sent as a JSON string
+        recipe,
       };
 
       const cocktail = await createOrUpdateCocktail(cocktailData);
-
-      // Delete the temporary file
-      fs.unlinkSync(cocktailImage.path);
 
       res.status(200).json(cocktail);
     } else {

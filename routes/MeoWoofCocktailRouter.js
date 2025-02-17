@@ -1,29 +1,16 @@
-import {
-  getAllCocktails,
-  getCocktailById,
-  addCocktail,
-  deleteCocktailById,
-} from "../controllers/MeoWoofCocktailController.js";
 import express from "express";
 import multer from "multer";
-import path from "path";
+import {
+  addCocktail,
+  getAllCocktails,
+  getCocktailById,
+  deleteCocktailById,
+} from "../controllers/MeoWoofCocktailController.js";
 
 const router = express.Router();
 
-// Configure Multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "temp/uploads/"); // Ensure this directory exists
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-
-const upload = multer({
-  storage: storage,
-  // limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
-});
+// Configure Multer for memory storage
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.get("/", getAllCocktails);
 router.get("/:id", getCocktailById);
