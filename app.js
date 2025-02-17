@@ -12,6 +12,8 @@ import ProfileRouter from "./routes/ProfileRouter.js";
 import FollowerRouter from "./routes/FollowerRouter.js";
 import PlaylistRouter from "./routes/PlaylistRouter.js";
 
+import MeoWoofCocktailRouter from "./routes/MeoWoofCocktailRouter.js";
+
 import config from "./config/auth.config.js";
 import getAccessTokenUsingRefreshToken from "./services/refreshToken.service.js";
 import connectDB from "./config/database.js";
@@ -19,14 +21,21 @@ import connectDB from "./config/database.js";
 const app = express();
 const PORT = config.port || 3000;
 
-const corsOptions = {
-  origin: "*", // TODO: set to the frontend's url
-  methods: "GET, HEAD, PUT, POST, DELETE",
-  credentials: true,
-  optionsSuccessStatus: 204,
-};
+// const corsOptions = {
+//   origin: "*", // TODO: set to the frontend's url
+//   methods: "GET, HEAD, PUT, POST, DELETE",
+//   credentials: true,
+//   optionsSuccessStatus: 204,
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
+
+app.use("/api/cocktails", MeoWoofCocktailRouter);
 
 //TODO: align with spotify's rate limits https://developer.spotify.com/documentation/web-api/concepts/rate-limits
 const limiter = rateLimit({
@@ -104,6 +113,11 @@ app.use(async (req, res, next) => {
   next();
 });
 
+// TODO: Serve the API documentation here
+// app.get("/", (req, res) => {
+//   res.status(200).send();
+// });
+
 app.get("/api/health", (req, res) => {
   res.status(200).send("<html><body><h1>Status: OK</h1></body></html>");
 });
@@ -111,6 +125,8 @@ app.get("/api/health", (req, res) => {
 app.use("/api/login", LoginRouter);
 app.use("/api/token", TokenRouter);
 app.use("/api/logout", LogoutRouter);
+
+// TODO: whenever use is not authenticated, clear session store and cookie
 
 // check if user is authenticated
 app.use((req, res, next) => {

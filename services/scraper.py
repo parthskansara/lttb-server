@@ -50,7 +50,6 @@ def scrape_page(user_id, timeout=20):
         titles = [tag['title'] for tag in matches]
         ids = [parse_id(tag['id']) for tag in matches]
 
-        # json_array = [title + "#$" + id for title, id in zip(titles, follower_ids)]
         json_array = [{"followerName": title, "followerId": id} for title, id in zip(titles, ids)]
         return json.dumps(json_array if json_array else [])
     
