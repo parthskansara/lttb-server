@@ -104,10 +104,10 @@ export const createOrUpdateCocktail = async (cocktailData) => {
   }
 };
 
-export const deleteCocktail = async (cocktailId) => {
+export const deleteCocktail = async (displayName) => {
   console.log("Request made to the database");
   try {
-    const result = await Cocktails.deleteOne({ cocktailId });
+    const result = await Cocktails.deleteOne({ displayName });
     if (result.deletedCount === 0) {
       //   return { message: "Cocktail not found" };
       throw new Error("Cocktail not found");

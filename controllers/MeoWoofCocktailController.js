@@ -67,10 +67,11 @@ export const addCocktail = async (req, res) => {
   }
 };
 
-export const deleteCocktailById = async (req, res) => {
-  const cocktailId = req.params.id;
+export const deleteCocktailByName = async (req, res) => {
+  const displayName = req.params.name;
   try {
-    const response = await deleteCocktail(cocktailId);
+    console.log(displayName);
+    const response = await deleteCocktail(displayName);
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ message: error.message });

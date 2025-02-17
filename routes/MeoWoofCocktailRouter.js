@@ -4,7 +4,7 @@ import {
   addCocktail,
   getAllCocktails,
   getCocktailById,
-  deleteCocktailById,
+  deleteCocktailByName,
 } from "../controllers/MeoWoofCocktailController.js";
 
 const router = express.Router();
@@ -15,6 +15,6 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.get("/", getAllCocktails);
 router.get("/:id", getCocktailById);
 router.post("/", upload.single("cocktailImage"), addCocktail);
-router.delete("/:id", deleteCocktailById);
+router.delete("/:name", deleteCocktailByName);
 
 export default router;
