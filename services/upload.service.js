@@ -13,7 +13,7 @@ export const constructUrlFromId = (imageId) => {
 export const uploadFile = async (imageName, fileBuffer) => {
   try {
     const auth = new google.auth.GoogleAuth({
-      keyFile: "./meowoof-site-key.json",
+      keyFile: "meowoof-site-key.json",
       scopes: ["https://www.googleapis.com/auth/drive"],
     });
 
