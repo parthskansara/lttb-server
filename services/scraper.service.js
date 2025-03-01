@@ -1,10 +1,17 @@
-import puppeteer from "puppeteer";
 import * as cheerio from "cheerio";
-import path from "path";
-import { fileURLToPath } from "url";
+import * as chromeAwsLambda from "chrome-aws-lambda";
+import puppeteerCore from "puppeteer-core";
+import puppeteer from "puppeteer";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+let chrome = {};
+let puppeteerInstance;
+
+if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+  chrome = chromeAwsLambda;
+  puppeteerInstance = puppeteerCore;
+} else {
+  puppeteerInstance = puppeteer;
+}
 
 function parseId(idString) {
   return idString.split(":")[2].split("-")[0];
@@ -14,14 +21,19 @@ async function scrapePage(userId, timeout = 20000) {
   console.log("Fetching followers via js");
   const url = `https://open.spotify.com/user/${userId}/followers`;
 
-  const browser = await puppeteer.launch({
-    headless: "new",
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-    ],
-  });
+  let options = {};
+
+  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+    options = {
+      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
+      defaultViewport: chrome.defaultViewport,
+      executablePath: await chrome.executablePath,
+      headless: true,
+      ignoreHTTPSErrors: true,
+    };
+  }
+
+  const browser = await puppeteerInstance.launch(options);
 
   const page = await browser.newPage();
 
@@ -43,7 +55,7 @@ async function scrapePage(userId, timeout = 20000) {
 
     return JSON.stringify(jsonArray.length ? jsonArray : []);
   } catch (error) {
-    if (error instanceof puppeteer.errors.TimeoutError) {
+    if (error instanceof puppeteerInstance.errors.TimeoutError) {
       console.error(`Page load timed out after ${timeout / 1000} seconds`);
       return JSON.stringify({ error: "Timed out" });
     }
