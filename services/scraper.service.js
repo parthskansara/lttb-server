@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import chromeAwsLambda from "chrome-aws-lambda";
 import puppeteerCore from "puppeteer-core";
 import puppeteer from "puppeteer";
 
@@ -6,9 +7,7 @@ let chrome = {};
 let puppeteerInstance;
 
 if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  import("chrome-aws-lambda").then((module) => {
-    chrome = module;
-  });
+  chrome = chromeAwsLambda;
   puppeteerInstance = puppeteerCore;
 } else {
   puppeteerInstance = puppeteer;
