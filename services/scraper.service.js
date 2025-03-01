@@ -1,5 +1,4 @@
 import * as cheerio from "cheerio";
-import * as chromeAwsLambda from "chrome-aws-lambda";
 import puppeteerCore from "puppeteer-core";
 import puppeteer from "puppeteer";
 
@@ -7,7 +6,9 @@ let chrome = {};
 let puppeteerInstance;
 
 if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  chrome = chromeAwsLambda;
+  import("chrome-aws-lambda").then((module) => {
+    chrome = module;
+  });
   puppeteerInstance = puppeteerCore;
 } else {
   puppeteerInstance = puppeteer;
@@ -18,6 +19,10 @@ function parseId(idString) {
 }
 
 async function scrapePage(userId, timeout = 20000) {
+  console.log(
+    "AWS_LAMBDA_FUNCTION_VERSION: ",
+    process.env.AWS_LAMBDA_FUNCTION_VERSION
+  );
   console.log("Fetching followers via js");
   const url = `https://open.spotify.com/user/${userId}/followers`;
 
