@@ -14,6 +14,8 @@ const getAccessToken = async (req, res) => {
   const clientId = config.clientId;
   const redirectUri = config.redirectUri;
 
+  console.log("Redirect URI: ", redirectUri);
+
   const params = new URLSearchParams({
     client_id: clientId,
     grant_type: "authorization_code",
