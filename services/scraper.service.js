@@ -32,7 +32,12 @@ async function scrapePage(userId, timeout = 20000) {
 
   if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
     options = {
-      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
+      args: [
+        ...chrome.args,
+        "--hide-scrollbars",
+        "--disable-web-security",
+        "--no-sandbox",
+      ],
       defaultViewport: chrome.defaultViewport,
       executablePath: await chrome.executablePath,
       headless: true,
