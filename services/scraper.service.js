@@ -1,5 +1,5 @@
-import { Builder, ServiceBuilder, By, until } from "selenium-webdriver";
-import { Options } from "selenium-webdriver/chrome.js";
+import { Builder, By, until } from "selenium-webdriver";
+import { Options, ServiceBuilder } from "selenium-webdriver/chrome.js";
 import * as cheerio from "cheerio";
 import path from "path";
 import { fileURLToPath } from "url";
