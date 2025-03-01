@@ -13,7 +13,7 @@
   "description": "",
   "dependencies": {
     "cheerio": "^1.0.0",
-    "chrome-aws-lambda": "^10.1.0",
+    "chrome-aws-lambda": "^6",
     "connect-mongo": "^5.1.0",
     "connect-redis": "^8.0.1",
     "cors": "^2.8.5",
@@ -27,7 +27,7 @@
     "multer": "^1.4.5-lts.1",
     "node-localstorage": "^3.0.5",
     "nodemon": "^3.1.7",
-    "puppeteer-core": "^10.1.0",
+    "puppeteer-core": "^6",
     "selenium-webdriver": "^4.29.0"
   },
   "devDependencies": {
