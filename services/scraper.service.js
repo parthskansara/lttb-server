@@ -5,11 +5,9 @@ import chromium from "@sparticuz/chromium";
 import puppeteerCore from "puppeteer-core";
 import puppeteer from "puppeteer";
 
-let chrome = {};
 let puppeteerInstance;
 
 if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  chrome = chromium;
   puppeteerInstance = puppeteerCore;
 } else {
   puppeteerInstance = puppeteer;
@@ -29,19 +27,19 @@ async function scrapePage(userId, timeout = 20000) {
 
   let options = {};
 
-  console.log("Chrome Args: ", chrome.args);
-  console.log("Chrome DefaultViewport: ", chrome.defaultViewport);
+  console.log("Chrome Args: ", chromium.args);
+  console.log("Chrome DefaultViewport: ", chromium.defaultViewport);
 
   if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
     options = {
       args: [
-        ...chrome.args,
+        ...chromium.args,
         "--hide-scrollbars",
         "--disable-web-security",
         "--no-sandbox",
       ],
-      defaultViewport: chrome.defaultViewport,
-      executablePath: await chrome.executablePath(),
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
       headless: true,
       ignoreHTTPSErrors: true,
     };
