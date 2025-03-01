@@ -28,6 +28,8 @@ async function scrapePage(userId, timeout = 20000) {
 
   let options = {};
 
+  console.log("Chrome Args: ", chrome.args);
+
   if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
     options = {
       args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
