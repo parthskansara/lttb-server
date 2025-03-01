@@ -1,37 +1,54 @@
 import { createOrUpdateUser } from "../services/user.service.js";
 
 const getProfile = async (req, res) => {
-  if (
-    !req.session ||
-    !req.session.spotify ||
-    !req.session.spotify.accessToken
-  ) {
-    return res.status(401).json({ error: "Unauthorized" });
+  try {
+    console.log("Getting Profile!");
+
+    if (!req.session?.spotify?.accessToken) {
+      console.error("Missing Access Token");
+      return res
+        .status(401)
+        .json({ error: "Unauthorized: Missing access token" });
+    }
+
+    const accessToken = req.session.spotify.accessToken;
+    const response = await fetch("https://api.spotify.com/v1/me", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Spotify API error:", errorData);
+      return res
+        .status(response.status)
+        .json({ error: "Failed to fetch profile from Spotify" });
+    }
+
+    const data = await response.json();
+    req.session.spotify.user_id = data.id;
+
+    const userData = {
+      userId: data.id,
+      displayName: data.display_name,
+      accessToken: accessToken,
+      refreshToken: req.session.spotify.refreshToken,
+      expiresIn: req.session.spotify.expiresIn,
+      imageUrl: data.images?.[0]?.url,
+    };
+
+    console.log("Creating user from ProfileController");
+    await createOrUpdateUser(userData);
+
+    await req.session.save();
+
+    console.log("Returning Profile with data!");
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error in getProfile:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-
-  const accessToken = req.session.spotify.accessToken;
-  const response = await fetch("https://api.spotify.com/v1/me", {
-    headers: {
-      Authorization: "Bearer " + accessToken,
-    },
-  });
-
-  const data = await response.json();
-  req.session.spotify.user_id = data.id;
-
-  const userData = {
-    userId: data.id,
-    displayName: data.display_name,
-    accessToken: accessToken,
-    refreshToken: req.session.spotify.refreshToken,
-    expiresIn: req.session.spotify.expiresIn,
-    imageUrl: data.images?.[0].url,
-  };
-  console.log("Creating user from ProfileController");
-  await createOrUpdateUser(userData);
-
-  await req.session.save();
-  res.status(200).json(data);
 };
 
 const getTopArtists = async (req, res) => {

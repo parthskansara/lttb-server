@@ -50,6 +50,7 @@ const getAccessToken = async (req, res) => {
     res.redirect(`${clientUrl}/user`);
   } catch (error) {
     console.error("Error fetching token: ", error);
+    throw err;
   }
 };
 

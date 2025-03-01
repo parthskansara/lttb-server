@@ -50,7 +50,7 @@ connectDB();
 const mongoUri = config.mongoUri;
 
 // if server runs behind a proxy (eg. k8s, nginx etc)
-// app.set('trust proxy', 1)
+app.set("trust proxy", 1);
 
 // configure session middleware
 app.use(
