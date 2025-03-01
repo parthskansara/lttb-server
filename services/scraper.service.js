@@ -1,21 +1,34 @@
-import { Builder, By, until } from "selenium-webdriver";
+import { Builder, ServiceBuilder, By, until } from "selenium-webdriver";
 import { Options } from "selenium-webdriver/chrome.js";
 import * as cheerio from "cheerio";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function parseId(idString) {
   return idString.split(":")[2].split("-")[0];
 }
 
 async function scrapePage(userId, timeout = 20000) {
+  const chromeDriverPath = path.join(__dirname, "drivers", "chromedriver");
+
+  const serviceBuilder = new ServiceBuilder(chromeDriverPath);
+
   console.log("Fetching followers via js");
   const url = `https://open.spotify.com/user/${userId}/followers`;
 
-  const options = new Options();
+  let options = new Options();
   options.addArguments("--headless");
+  options.addArguments("--no-sandbox");
+
+  options.addArguments("--disable-dev-shm-usage");
 
   const driver = await new Builder()
     .forBrowser("chrome")
     .setChromeOptions(options)
+    .setChromeService(serviceBuilder)
     .build();
 
   try {
