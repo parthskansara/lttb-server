@@ -118,6 +118,14 @@ app.use(async (req, res, next) => {
 //   res.status(200).send();
 // });
 
+app.get("/", (req, res) => {
+  res
+    .status(200)
+    .send(
+      "<html><body><h1>API for listentothis,bro is <span style='color:green'>live</span></h1></body></html>"
+    );
+});
+
 app.get("/api/health", (req, res) => {
   res.status(200).send("<html><body><h1>Status: OK</h1></body></html>");
 });
