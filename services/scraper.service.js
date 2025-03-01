@@ -41,7 +41,7 @@ async function scrapePage(userId, timeout = 20000) {
         "--no-sandbox",
       ],
       defaultViewport: chrome.defaultViewport,
-      executablePath: await chrome.executablePath,
+      executablePath: await chrome.executablePath(),
       headless: true,
       ignoreHTTPSErrors: true,
     };
