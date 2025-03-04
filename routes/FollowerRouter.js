@@ -19,12 +19,13 @@ router.get("/", async (req, res) => {
     }
 
     const user_id = req.session.spotify.user_id;
+    const shouldRefresh = req.query.refresh === "true";
 
     console.log("Getting followers for user id: ", user_id);
     const userObject = await getUserByUserId(user_id);
     const user = userObject.toObject();
 
-    if (user?.followers?.length > 0) {
+    if (user?.followers?.length > 0 && !shouldRefresh) {
       // console.log("Fetched followers in FollowerRouter", user.followers);
       return res.status(200).json(user.followers);
     } else {
