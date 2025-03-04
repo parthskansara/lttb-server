@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { targetUrl, codeVerifier } from "../services/auth.service.js";
+import getAuthUrl from "../services/auth.service.js";
 import config from "../config/auth.config.js";
 
 dotenv.config();
@@ -7,6 +7,7 @@ dotenv.config();
 const clientId = process.env.CLIENT_ID;
 
 const getUrl = async (req, res) => {
+  const { targetUrl, codeVerifier } = await getAuthUrl();
   let finalUrl = targetUrl;
   if (req.session && req.session.spotify && req.session.spotify.accessToken) {
     try {

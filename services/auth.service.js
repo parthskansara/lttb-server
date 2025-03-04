@@ -8,20 +8,24 @@ const clientId = config.clientId;
 const scope =
   "user-read-private user-read-email user-top-read playlist-modify-public playlist-modify-private";
 
-const authUrl = new URL("https://accounts.spotify.com/authorize");
-const { codeChallenge, codeVerifier } =
-  await generateCodeChallengeAndVerifier();
+const getAuthUrl = async () => {
+  const authUrl = new URL("https://accounts.spotify.com/authorize");
+  const { codeChallenge, codeVerifier } =
+    await generateCodeChallengeAndVerifier();
 
-const params = {
-  response_type: "code",
-  client_id: clientId,
-  scope,
-  code_challenge_method: "S256",
-  code_challenge: codeChallenge,
-  redirect_uri: redirectUri,
+  const params = {
+    response_type: "code",
+    client_id: clientId,
+    scope,
+    code_challenge_method: "S256",
+    code_challenge: codeChallenge,
+    redirect_uri: redirectUri,
+  };
+
+  authUrl.search = new URLSearchParams(params).toString();
+  const targetUrl = authUrl.toString();
+
+  return { targetUrl, codeVerifier };
 };
 
-authUrl.search = new URLSearchParams(params).toString();
-const targetUrl = authUrl.toString();
-
-export { targetUrl, codeVerifier };
+export default getAuthUrl;
