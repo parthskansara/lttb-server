@@ -29,7 +29,9 @@ const logOut = async (req, res) => {
     req.session.destroy((err) => {
       if (err) {
         console.error("Error logging out: ", err);
-        res.status(400).json({ message: "Unable to log out, try again!" });
+        return res
+          .status(400)
+          .json({ message: "Unable to log out, try again!" });
       }
       res.clearCookie("connect.sid", {
         path: "/",
@@ -37,7 +39,7 @@ const logOut = async (req, res) => {
         secure: process.env.NODE_ENV === "production",
       });
       console.log("Logout successful");
-      res.status(200).json({ message: "Logout successful" });
+      return res.status(200).json({ message: "Logout successful" });
     });
   } else {
     res.end();

@@ -4,7 +4,16 @@ const getAccessToken = async (req, res) => {
   const clientUrl = config.clientUrl;
 
   if (!req.query || !req.session?.spotify?.codeVerifier) {
-    return res.status(401).json({ error: "Unauthorized" });
+    if (!req.query) {
+      return res.status(401).json({
+        error: `Unauthorized: Missing req.query. Currently: ${req.query}`,
+      });
+    }
+    if (!req.session?.spotify?.codeVerifier) {
+      return res.status(401).json({
+        error: `Unauthorized: Missing req.session?.spotify?.codeVerifier. Currently: ${req.session?.spotify?.codeVerifier}`,
+      });
+    }
   }
 
   const { code } = req.query; // Gets authorization code from Spotify's redirect after successful login
