@@ -16,7 +16,7 @@
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/lttb-server.git
+    git clone https://github.com/parthskansara/lttb-server.git
     cd lttb-server
     ```
 
